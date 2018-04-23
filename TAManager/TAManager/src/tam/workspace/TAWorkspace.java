@@ -85,6 +85,10 @@ public class TAWorkspace extends AppWorkspaceComponent {
     HashMap<String, Label> officeHoursGridTimeCellLabels;
     HashMap<String, Pane> officeHoursGridTACellPanes;
     HashMap<String, Label> officeHoursGridTACellLabels;
+    
+    // Reference to last selected TA
+    
+    private TeachingAssistant lastSelected;
 
     /**
      * The contstructor initializes the user interface, except for
@@ -461,9 +465,23 @@ public class TAWorkspace extends AppWorkspaceComponent {
     	
     }
     public void handleMouseEvent(MouseEvent event) {
-		TeachingAssistant ta = taTable.getSelectionModel().getSelectedItem();
-		this.nameTextField.setText(ta.getName());
-		this.emailTextField.setText(ta.getEmail());
+    	TeachingAssistant ta = taTable.getSelectionModel().getSelectedItem();
+    	PropertiesManager props = PropertiesManager.getPropertiesManager();
+		if(lastSelected != ta) {
+			this.nameTextField.setText(ta.getName());
+			this.emailTextField.setText(ta.getEmail());
+			addButton.setText(props.getProperty(TAManagerProp.EDIT_BUTTON_TEXT));
+			lastSelected = ta;
+			
+		}
+		else {
+			lastSelected = null;
+			taTable.getSelectionModel().clearSelection();
+			this.nameTextField.setText("");
+			this.emailTextField.setText("");
+			addButton.setText(props.getProperty(TAManagerProp.ADD_BUTTON_TEXT));
+			
+		}
     }
     public void clearInputFields() {
     		this.nameTextField.clear();

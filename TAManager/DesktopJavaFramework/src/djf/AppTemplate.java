@@ -4,6 +4,7 @@ import djf.ui.*;
 import djf.components.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import properties_manager.PropertiesManager;
 import static djf.settings.AppPropertyType.*;
 import static djf.settings.AppStartupConstants.*;
@@ -103,7 +104,9 @@ public abstract class AppTemplate extends Application {
                 
                 // BUILD THE APP GUI OBJECT FIRST, BUT DON'T
 		gui = new AppGUI(primaryStage, appTitle, this);
-
+		primaryStage.setOnCloseRequest(event->{
+			handleClosingWindow(event);
+		});
                 // THIS BUILDS ALL OF THE COMPONENTS, NOTE THAT
                 // IT WOULD BE DEFINED IN AN APPLICATION-SPECIFIC
                 // CHILD CLASS
@@ -138,5 +141,19 @@ public abstract class AppTemplate extends Application {
 	    dialog.show(props.getProperty(PROPERTIES_LOAD_ERROR_TITLE), props.getProperty(PROPERTIES_LOAD_ERROR_MESSAGE));
 	    return false;
 	}
+    }
+    
+    public void handleClosingWindow(WindowEvent event) {
+    	System.out.println("attempting to close window");
+    	if (!gui.isWorkSaved()) {
+    		PropertiesManager props = PropertiesManager.getPropertiesManager();
+        	AppYesNoCancelDialogSingleton yesNoDialog = AppYesNoCancelDialogSingleton.getSingleton();
+        yesNoDialog.show(props.getProperty(SAVE_UNSAVED_WORK_TITLE),props.getProperty(SAVE_UNSAVED_WORK_MESSAGE));
+    	String answer = yesNoDialog.getSelection();
+    	if (answer == AppYesNoCancelDialogSingleton.YES) {
+    		
+    	}
+    	}
+    	
     }
 }

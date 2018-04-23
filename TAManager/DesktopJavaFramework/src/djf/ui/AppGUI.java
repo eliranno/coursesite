@@ -243,8 +243,14 @@ public class AppGUI {
 	saveButton.getStyleClass().add(CLASS_FILE_BUTTON);
 	exitButton.getStyleClass().add(CLASS_FILE_BUTTON);
     }
+    
     public void markWorkspaceAsEdited() {
 		fileController.markAsEdited(this);
-}
+    }
+    
+    public boolean isWorkSaved() {
+    	return fileController.isSaved();
+    }
+    
 
 }

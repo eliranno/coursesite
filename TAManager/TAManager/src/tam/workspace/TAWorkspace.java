@@ -23,11 +23,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import properties_manager.PropertiesManager;
 import tam.TAManagerProp;
 import tam.style.TAStyle;
@@ -96,6 +103,8 @@ public class TAWorkspace extends AppWorkspaceComponent {
         String tasHeaderText = props.getProperty(TAManagerProp.TAS_HEADER_TEXT.toString());
         tasHeaderLabel = new Label(tasHeaderText);
         tasHeaderBox.getChildren().add(tasHeaderLabel);
+        tasHeaderBox.setStyle("-fx-background-color: blue;");
+        tasHeaderLabel.setFont(Font.font(24));
 
         // MAKE THE TABLE AND SETUP THE DATA MODEL
         taTable = new TableView();
@@ -139,6 +148,8 @@ public class TAWorkspace extends AppWorkspaceComponent {
         String officeHoursGridText = props.getProperty(TAManagerProp.OFFICE_HOURS_SUBHEADER.toString());
         officeHoursHeaderLabel = new Label(officeHoursGridText);
         officeHoursHeaderBox.getChildren().add(officeHoursHeaderLabel);
+        officeHoursHeaderBox.setStyle("-fx-background-color: blue;");
+        officeHoursHeaderLabel.setFont(Font.font(24));
         
         // THESE WILL STORE PANES AND LABELS FOR OUR OFFICE HOURS GRID
         officeHoursGridPane = new GridPane();
@@ -150,7 +161,7 @@ public class TAWorkspace extends AppWorkspaceComponent {
         officeHoursGridTimeCellLabels = new HashMap();
         officeHoursGridTACellPanes = new HashMap();
         officeHoursGridTACellLabels = new HashMap();
-
+        
         // ORGANIZE THE LEFT AND RIGHT PANES
         VBox leftPane = new VBox();
         leftPane.getChildren().add(tasHeaderBox);  
@@ -390,9 +401,26 @@ public class TAWorkspace extends AppWorkspaceComponent {
         // MAKE THE LABEL IN A PANE
         Label cellLabel = new Label("");
         HBox cellPane = new HBox();
+        cellPane.setBorder(new Border(new BorderStroke(Color.BLACK, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         cellPane.setAlignment(Pos.CENTER);
         cellPane.getChildren().add(cellLabel);
-
+        if (row ==0){	
+        	cellPane.setStyle("-fx-background-color: #002266" );
+        	cellLabel.setFont(Font.font(14));
+        	cellLabel.setTextFill(Color.web("white"));
+        }
+        else if(row>0 && col<2) {
+        	cellPane.setStyle("-fx-background-color: #002266" );
+    		cellLabel.setFont(Font.font(14));
+    		cellLabel.setTextFill(Color.web("white"));
+        }
+        else {
+        	cellPane.setStyle("-fx-background-color: #ccff33" );
+    		cellLabel.setFont(Font.font(14));
+    		cellLabel.setTextFill(Color.web("black"));
+        }
+        
         // BUILD A KEY TO EASILY UNIQUELY IDENTIFY THE CELL
         String cellKey = dataComponent.getCellKey(col, row);
         cellPane.setId(cellKey);

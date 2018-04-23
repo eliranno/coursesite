@@ -471,6 +471,9 @@ public class TAWorkspace extends AppWorkspaceComponent {
 			this.nameTextField.setText(ta.getName());
 			this.emailTextField.setText(ta.getEmail());
 			addButton.setText(props.getProperty(TAManagerProp.EDIT_BUTTON_TEXT));
+			addButton.setOnAction(e -> {
+	            controller.handleEditTA();
+			});
 			lastSelected = ta;
 			
 		}
@@ -480,6 +483,9 @@ public class TAWorkspace extends AppWorkspaceComponent {
 			this.nameTextField.setText("");
 			this.emailTextField.setText("");
 			addButton.setText(props.getProperty(TAManagerProp.ADD_BUTTON_TEXT));
+			addButton.setOnAction(e -> {
+	            controller.handleAddTA();
+			});
 			
 		}
     }

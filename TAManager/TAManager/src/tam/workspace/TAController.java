@@ -84,6 +84,24 @@ public class TAController {
             nameTextField.requestFocus();
         }
     }
+    
+    public void handleEditTA() {
+        TAWorkspace workspace = (TAWorkspace)app.getWorkspaceComponent();
+        TeachingAssistant currentTA = (TeachingAssistant) workspace.getTATable().getSelectionModel().getSelectedItem();
+        TextField nameTextField = workspace.getNameTextField();
+        TextField emailTextField = workspace.getEmailTextField();
+        String name = nameTextField.getText();
+        String email = emailTextField.getText();
+        TAData data = (TAData)app.getDataComponent();
+        
+        for (TeachingAssistant ta : (ObservableList<TeachingAssistant>) data.getTeachingAssistants() ) {
+        	if (ta.compareTo(currentTA) == 0) {
+                ta.setName(name);
+                ta.setEmail(email);
+        	}
+        	
+        }
+    }
 
     /**
      * This function provides a response for when the user clicks

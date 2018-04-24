@@ -2,6 +2,8 @@ package tam.workspace;
 
 import static tam.TAManagerProp.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -86,21 +88,14 @@ public class TAController {
     }
     
     public void handleEditTA() {
-        TAWorkspace workspace = (TAWorkspace)app.getWorkspaceComponent();
+    	TAWorkspace workspace = (TAWorkspace)app.getWorkspaceComponent();
         TeachingAssistant currentTA = (TeachingAssistant) workspace.getTATable().getSelectionModel().getSelectedItem();
         TextField nameTextField = workspace.getNameTextField();
         TextField emailTextField = workspace.getEmailTextField();
-        String name = nameTextField.getText();
-        String email = emailTextField.getText();
+        String newName = nameTextField.getText();
+        String newEmail = emailTextField.getText();
         TAData data = (TAData)app.getDataComponent();
-        
-        for (TeachingAssistant ta : (ObservableList<TeachingAssistant>) data.getTeachingAssistants() ) {
-        	if (ta.compareTo(currentTA) == 0) {
-                ta.setName(name);
-                ta.setEmail(email);
-        	}
-        	
-        }
+        data.editTA(currentTA, newName, newEmail);
     }
 
     /**

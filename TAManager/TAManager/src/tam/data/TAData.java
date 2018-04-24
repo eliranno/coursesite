@@ -1,6 +1,7 @@
 package tam.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -250,6 +251,28 @@ public class TAData implements AppDataComponent {
         // SORT THE TAS
         Collections.sort(teachingAssistants);
     }
+    
+   public void editTA(TeachingAssistant ta, String newName,String newEmail) {
+	   String oldName = ta.getName();
+	   for (TeachingAssistant testTA : teachingAssistants) {
+		   if (testTA.compareTo(ta) == 0){
+			   testTA.setName(newName);
+			   testTA.setEmail(newEmail);
+			   break;
+		   }
+	   }
+	   Collections.sort(teachingAssistants);
+	   updateNameInGridPane(oldName,newName);
+	   
+   }
+   
+   public void updateNameInGridPane(String oldName,String newName) {
+	   Collection<StringProperty> collection = officeHours.values();
+	   for (StringProperty prop : collection) {
+		   String newString = prop.getValue().replaceAll(oldName, newName);
+		   prop.setValue(newString);
+	   }
+   }
 
     public void addOfficeHoursReservation(String day, String time, String taName) {
         String cellKey = getCellKey(day, time);

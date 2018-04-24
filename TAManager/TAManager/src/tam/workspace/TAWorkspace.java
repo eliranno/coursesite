@@ -449,18 +449,24 @@ public class TAWorkspace extends AppWorkspaceComponent {
     			app.getGUI().markWorkspaceAsEdited();
     		}
     		else if(event.getCode() == KeyCode.UP) {
+    			int index = taTable.getSelectionModel().getSelectedIndex();
+    			if(index!=0) {
     			TeachingAssistant ta = taTable.getSelectionModel().getSelectedItem();
     			ta = this.controller.getPreviousTeachingAssistant(ta);
     			this.nameTextField.setText(ta.getName());
     			this.emailTextField.setText(ta.getEmail());
+    			}
     			
     		}
     		else if(event.getCode() == KeyCode.DOWN) {
+    			int index = taTable.getSelectionModel().getSelectedIndex();
+    			int tableSize = taTable.getItems().size();
+    			if(index!=tableSize-1) {
     			TeachingAssistant ta = taTable.getSelectionModel().getSelectedItem();
     			ta = this.controller.getNextTeachingAssistant(ta);
     			this.nameTextField.setText(ta.getName());
     			this.emailTextField.setText(ta.getEmail());
-    			
+    			}
     		}
     	
     }
@@ -473,6 +479,7 @@ public class TAWorkspace extends AppWorkspaceComponent {
 			addButton.setText(props.getProperty(TAManagerProp.EDIT_BUTTON_TEXT));
 			addButton.setOnAction(e -> {
 	            controller.handleEditTA();
+	            taTable.refresh();
 			});
 			lastSelected = ta;
 			

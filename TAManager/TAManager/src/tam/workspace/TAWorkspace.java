@@ -4,6 +4,7 @@ import djf.components.AppDataComponent;
 import djf.components.AppWorkspaceComponent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 
@@ -70,7 +71,7 @@ public class TAWorkspace extends AppWorkspaceComponent {
     HBox addBox;
     TextField nameTextField, emailTextField;
     Button addButton;
-
+    Button clearButton;
     // THE HEADER ON THE RIGHT
     HBox officeHoursHeaderBox;
     Label officeHoursHeaderLabel;
@@ -88,7 +89,14 @@ public class TAWorkspace extends AppWorkspaceComponent {
     
     // Reference to last selected TA
     
-    private TeachingAssistant lastSelected;
+    TeachingAssistant lastSelected;
+    
+    static final String EMAIL_PATTERN = 
+    		"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+    		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    static final String NAME_PATTERN = 
+    		"[a-zA-Z][a-zA-Z ]*";
+
 
     /**
      * The contstructor initializes the user interface, except for
@@ -133,19 +141,23 @@ public class TAWorkspace extends AppWorkspaceComponent {
         String namePromptText = props.getProperty(TAManagerProp.NAME_PROMPT_TEXT.toString());
         String emailPromptText = props.getProperty(TAManagerProp.EMAIL_PROMPT_TEXT.toString());
         String addButtonText = props.getProperty(TAManagerProp.ADD_BUTTON_TEXT.toString());
+        String clearButtonText = props.getProperty(TAManagerProp.CLEAR_BUTTON_TEXT.toString());
         nameTextField = new TextField();
         nameTextField.setPromptText(namePromptText);
         emailTextField = new TextField();
         emailTextField.setPromptText(emailPromptText);
         
         addButton = new Button(addButtonText);
+        clearButton = new Button(clearButtonText);
         addBox = new HBox();
-        nameTextField.prefWidthProperty().bind(addBox.widthProperty().multiply(.4));
-        emailTextField.prefWidthProperty().bind(addBox.widthProperty().multiply(.4));
+        nameTextField.prefWidthProperty().bind(addBox.widthProperty().multiply(.3));
+        emailTextField.prefWidthProperty().bind(addBox.widthProperty().multiply(.3));
         addButton.prefWidthProperty().bind(addBox.widthProperty().multiply(.2));
+        clearButton.prefWidthProperty().bind(addBox.widthProperty().multiply(.2));
         addBox.getChildren().add(nameTextField);
         addBox.getChildren().add(emailTextField);
         addBox.getChildren().add(addButton);
+        addBox.getChildren().add(clearButton);
 
         // INIT THE HEADER ON THE RIGHT
         officeHoursHeaderBox = new HBox();
@@ -196,10 +208,14 @@ public class TAWorkspace extends AppWorkspaceComponent {
             controller.handleAddTA();
         });
         
+        clearButton.setOnKeyPressed(e->{
+        	handleClearButtonPressed();
+        });
+        
         taTable.setOnKeyPressed(new EventHandler<KeyEvent>(){
         		@Override
         		public void handle(KeyEvent event) {
-        			handleKeyPress(event);
+        			handleTableKeyPress(event);
         		}
         });
         taTable.setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -240,6 +256,10 @@ public class TAWorkspace extends AppWorkspaceComponent {
 
     public Button getAddButton() {
         return addButton;
+    }
+    
+    public Button getClearButton() {
+        return clearButton;
     }
 
     public HBox getOfficeHoursSubheaderBox() {
@@ -442,7 +462,7 @@ public class TAWorkspace extends AppWorkspaceComponent {
         dataComponent.setCellProperty(col, row, cellLabel.textProperty());        
     }
     
-    public void handleKeyPress(KeyEvent event) {
+    public void handleTableKeyPress(KeyEvent event) {
     		if (event.getCode() == KeyCode.DELETE) {
     			TeachingAssistant ta = taTable.getSelectionModel().getSelectedItem();
     			controller.deleteTA(ta);
@@ -487,8 +507,7 @@ public class TAWorkspace extends AppWorkspaceComponent {
 		else {
 			lastSelected = null;
 			taTable.getSelectionModel().clearSelection();
-			this.nameTextField.setText("");
-			this.emailTextField.setText("");
+			clearInputFields();
 			addButton.setText(props.getProperty(TAManagerProp.ADD_BUTTON_TEXT));
 			addButton.setOnAction(e -> {
 	            controller.handleAddTA();
@@ -500,4 +519,24 @@ public class TAWorkspace extends AppWorkspaceComponent {
     		this.nameTextField.clear();
     		this.emailTextField.clear();
     }
+    
+    private boolean validateNameAndEmail(String name,String email) {
+    	Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
+    	Pattern namePattern  = Pattern.compile(NAME_PATTERN);
+    	return emailPattern.matcher(email).matches() && namePattern.matcher(name).matches();
+    	
+    }
+    
+    private void handleClearButtonPressed() {
+    	PropertiesManager props = PropertiesManager.getPropertiesManager();
+    	clearInputFields();
+    	nameTextField.requestFocus();
+		addButton.setText(props.getProperty(TAManagerProp.ADD_BUTTON_TEXT));
+		addButton.setOnAction(e -> {
+            controller.handleAddTA();
+		});
+		workspace.
+		
+    }
+    
 }

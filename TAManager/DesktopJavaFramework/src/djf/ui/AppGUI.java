@@ -51,6 +51,7 @@ public class AppGUI {
     protected Button newButton;
     protected Button loadButton;
     protected Button saveButton;
+    protected Button saveAsButton;
     protected Button exitButton;
     
     // THIS DIALOG IS USED FOR GIVING FEEDBACK TO THE USER
@@ -116,13 +117,13 @@ public class AppGUI {
     public void updateToolbarControls(boolean saved) {
         // THIS TOGGLES WITH WHETHER THE CURRENT COURSE
         // HAS BEEN SAVED OR NOT
-    			saveButton.setDisable(saved);
-
+    	saveButton.setDisable(saved);
+    	saveAsButton.setDisable(saved);
         // ALL THE OTHER BUTTONS ARE ALWAYS ENABLED
         // ONCE EDITING THAT FIRST COURSE BEGINS
-	newButton.setDisable(false);
+    	newButton.setDisable(false);
         loadButton.setDisable(false);
-	exitButton.setDisable(false);
+        exitButton.setDisable(false);
 
         // NOTE THAT THE NEW, LOAD, AND EXIT BUTTONS
         // ARE NEVER DISABLED SO WE NEVER HAVE TO TOUCH THEM
@@ -144,6 +145,7 @@ public class AppGUI {
         newButton = initChildButton(fileToolbarPane,	NEW_ICON.toString(),	    NEW_TOOLTIP.toString(),	false);
         loadButton = initChildButton(fileToolbarPane,	LOAD_ICON.toString(),	    LOAD_TOOLTIP.toString(),	false);
         saveButton = initChildButton(fileToolbarPane,	SAVE_ICON.toString(),	    SAVE_TOOLTIP.toString(),	true);
+        saveAsButton = initChildButton(fileToolbarPane,	SAVE_AS_ICON.toString(),	SAVE_AS_TOOLTIP.toString(),	true);
         exitButton = initChildButton(fileToolbarPane,	EXIT_ICON.toString(),	    EXIT_TOOLTIP.toString(),	false);
 
 	// AND NOW SETUP THEIR EVENT HANDLERS
@@ -157,6 +159,10 @@ public class AppGUI {
         saveButton.setOnAction(e -> {
             fileController.handleSaveRequest();
         });
+        saveAsButton.setOnAction(e->{
+        	fileController.handleSaveAsRequest();
+        });
+        
         exitButton.setOnAction(e -> {
             fileController.handleExitRequest();
         });	
@@ -241,6 +247,7 @@ public class AppGUI {
 	newButton.getStyleClass().add(CLASS_FILE_BUTTON);
 	loadButton.getStyleClass().add(CLASS_FILE_BUTTON);
 	saveButton.getStyleClass().add(CLASS_FILE_BUTTON);
+	saveAsButton.getStyleClass().add(CLASS_FILE_BUTTON);
 	exitButton.getStyleClass().add(CLASS_FILE_BUTTON);
     }
     

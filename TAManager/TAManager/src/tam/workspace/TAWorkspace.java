@@ -535,8 +535,6 @@ public class TAWorkspace extends AppWorkspaceComponent {
 		addButton.setOnAction(e -> {
             controller.handleAddTA();
 		});
-		workspace.
-		
     }
     
 }

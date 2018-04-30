@@ -252,6 +252,14 @@ public class TAData implements AppDataComponent {
         Collections.sort(teachingAssistants);
     }
     
+    // ADD TeachingAssistant INSTANCE TO THE LIST
+    // TO BE ABLE TO USE UNDO/REDO THIS METHOND MUST BE CALLED WHEN ADDING A NEW TA
+    public void addTA(TeachingAssistant ta) {
+    	if(!containsTA(ta.getName())) {
+    		teachingAssistants.add(ta);
+    	}
+    }
+    
    public void editTA(TeachingAssistant ta, String newName,String newEmail) {
 	   String oldName = ta.getName();
 	   for (TeachingAssistant testTA : teachingAssistants) {

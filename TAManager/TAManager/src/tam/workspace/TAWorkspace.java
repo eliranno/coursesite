@@ -22,6 +22,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
@@ -41,6 +43,7 @@ import tam.TAManagerProp;
 import tam.style.TAStyle;
 import tam.data.TAData;
 import tam.data.TeachingAssistant;
+import tam.jtps.jTPS;
 
 /**
  * This class serves as the workspace component for the TA Manager
@@ -488,6 +491,14 @@ public class TAWorkspace extends AppWorkspaceComponent {
     			this.emailTextField.setText(ta.getEmail());
     			}
     		}
+    		
+    		else if (new KeyCodeCombination(KeyCode.Z,KeyCombination.CONTROL_DOWN).match(event)) {
+    			controller.undoTransaction();
+    		}
+    		
+    		else if (new KeyCodeCombination(KeyCode.Y,KeyCombination.CONTROL_DOWN).match(event)) {
+    			controller.redoTransaction();
+    		}
     	
     }
     public void handleMouseEvent(MouseEvent event) {
@@ -499,7 +510,6 @@ public class TAWorkspace extends AppWorkspaceComponent {
 			addButton.setText(props.getProperty(TAManagerProp.EDIT_BUTTON_TEXT));
 			addButton.setOnAction(e -> {
 	            controller.handleEditTA();
-	            taTable.refresh();
 			});
 			lastSelected = ta;
 			
@@ -535,6 +545,10 @@ public class TAWorkspace extends AppWorkspaceComponent {
 		addButton.setOnAction(e -> {
             controller.handleAddTA();
 		});
+    }
+    
+    public void refreshTable() {
+    	taTable.refresh();
     }
     
 }

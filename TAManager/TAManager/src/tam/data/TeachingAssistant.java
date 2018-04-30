@@ -26,6 +26,13 @@ public class TeachingAssistant<E extends Comparable<E>> implements Comparable<E>
     		email = new SimpleStringProperty(initEmail);
     	
     }
+    
+    // COPY CONSTRUCTOR
+    
+    public TeachingAssistant (TeachingAssistant ta) {
+    	name = new SimpleStringProperty(ta.getName());
+    	email = new SimpleStringProperty(ta.getEmail());
+    }
 
     // ACCESSORS AND MUTATORS FOR THE PROPERTIES
 

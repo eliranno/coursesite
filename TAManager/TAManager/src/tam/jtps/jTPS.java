@@ -1,4 +1,4 @@
-package jtps;
+package tam.jtps;
 
 import java.util.ArrayList;
 

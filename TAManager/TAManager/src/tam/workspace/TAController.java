@@ -18,6 +18,7 @@ import tam.TAManagerApp;
 import tam.data.TAData;
 import tam.data.TeachingAssistant;
 import tam.workspace.TAWorkspace;
+import tam.jtps.*;
 
 /**
  * This class provides responses to all workspace interactions, meaning
@@ -30,6 +31,7 @@ import tam.workspace.TAWorkspace;
 public class TAController {
     // THE APP PROVIDES ACCESS TO OTHER COMPONENTS AS NEEDED
     TAManagerApp app;
+    jTPS jTPSManager;
 
     /**
      * Constructor, note that the app must already be constructed.
@@ -37,6 +39,7 @@ public class TAController {
     public TAController(TAManagerApp initApp) {
         // KEEP THIS FOR LATER
         app = initApp;
+        jTPSManager = new jTPS();
     }
     
     /**
@@ -76,7 +79,11 @@ public class TAController {
         // EVERYTHING IS FINE, ADD A NEW TA
         else {
             // ADD THE NEW TA TO THE DATA
-            data.addTA(name,email);
+            //data.addTA(name,email);
+        	TeachingAssistant ta = new TeachingAssistant(name,email);
+        	AddTATranscation addTransaction = new AddTATranscation(ta, data);
+        	jTPSManager.addTransaction(addTransaction);
+        	
             app.getGUI().markWorkspaceAsEdited();
             
             // CLEAR THE TEXT FIELDS
@@ -95,7 +102,10 @@ public class TAController {
         String newName = nameTextField.getText();
         String newEmail = emailTextField.getText();
         TAData data = (TAData)app.getDataComponent();
-        data.editTA(currentTA, newName, newEmail);
+        //data.editTA(currentTA, newName, newEmail);
+        EditTATransaction editTaTransaction = new EditTATransaction(currentTA,newName,newEmail,data);
+        jTPSManager.addTransaction(editTaTransaction);
+        ((TAWorkspace)(app.getWorkspaceComponent())).refreshTable();
     }
 
     /**
@@ -119,7 +129,9 @@ public class TAController {
         		TAData data = (TAData)app.getDataComponent();
         		String cellKey = pane.getId();
         		// AND TOGGLE THE OFFICE HOURS IN THE CLICKED CELL
-        		data.toggleTAOfficeHours(cellKey, taName);
+        		//data.toggleTAOfficeHours(cellKey, taName);
+        		TAScheduleTransaction scheduleTransaction = new TAScheduleTransaction(cellKey, taName, data);
+        		jTPSManager.addTransaction(scheduleTransaction);
         		app.getGUI().markWorkspaceAsEdited();
         }
     }
@@ -143,4 +155,14 @@ public class TAController {
 		int previousIndex = index-1 < 0 ? size-1 : index-1;
 		return (TeachingAssistant) data.getTeachingAssistants().get(previousIndex);
 }
+    
+    public void undoTransaction() {
+    	this.jTPSManager.undoTransaction();
+    	((TAWorkspace)(app.getWorkspaceComponent())).refreshTable();
+    }
+    
+    public void redoTransaction() {
+    	this.jTPSManager.doTransaction();
+    	((TAWorkspace)(app.getWorkspaceComponent())).refreshTable();
+    }
 }
